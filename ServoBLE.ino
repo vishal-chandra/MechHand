@@ -27,58 +27,59 @@ Servo servo3;
 Servo servo4;
 Servo servo5;
 
-BLYNK_WRITE(V0)
-{
+//pinky
+BLYNK_WRITE(V0){
   //get and send slider info
   int angle = param.asInt();
   servo1.write(angle);
 }
-BLYNK_WRITE(V1)
-{
+//thumb
+BLYNK_WRITE(V1){
   //get and send slider info
   int angle = param.asInt();
   servo2.write(angle);
 }
-BLYNK_WRITE(V2)
-{
+//ring
+BLYNK_WRITE(V2){
   //get and send slider info
   int angle = param.asInt();
   servo3.write(angle);
 }
-BLYNK_WRITE(V3)
-{
+//index
+BLYNK_WRITE(V3){
   //get and send slider info
   int angle = param.asInt();
   servo4.write(angle);
 }
-BLYNK_WRITE(V4)
-{
+//middle
+BLYNK_WRITE(V4){
   //get and send slider info
   int angle = param.asInt();
   servo5.write(angle);
 }
 
-void setup()
-{
+void setup(){
+  //pins
   pinMode(servop1, OUTPUT);
   pinMode(servop2, OUTPUT);
   pinMode(servop3, OUTPUT);
   pinMode(servop4, OUTPUT);
   pinMode(servop5, OUTPUT);
  
+  //servos
   servo1.attach(servop1, 500, 2400);
   servo2.attach(servop2, 500, 2400); 
   servo3.attach(servop3, 500, 2400); 
   servo4.attach(servop4, 500, 2400); 
   servo5.attach(servop5, 500, 2400); 
-   
+  
+  //misc 
   Serial.begin(9600);
   Serial.println("Waiting for connections...");
   Blynk.setDeviceName("Blynk");
   Blynk.begin(auth);
 }
 
-void loop()
-{
+void loop(){
   Blynk.run();
 }
