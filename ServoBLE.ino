@@ -22,12 +22,8 @@ char auth[] = "7e305e4259c24f6795f3a723d8657e5c";
 Servo pinky;
 Servo thumb;
 Servo ring;
-Servo index;
+Servo findex;
 Servo middle;
-
-//gestures
-Gesture close(180, 180, 180, 180, 180);
-Gesture open(0, 0, 0, 0, 0);
 
 //doesn't do anything - for reference right now.
 enum vpins {vPinky = V0, vRing = V2, vMiddle = V4, vIndex = V3, vThumb = V1};
@@ -54,6 +50,11 @@ class Gesture {
     }
 };
 
+//gestures
+Gesture Gclose = Gesture(180, 180, 180, 180, 180);
+Gesture Gopen = Gesture(0, 0, 0, 0, 0);
+Gesture Gflip = Gesture(0, 0, 180, 0, 0);
+
 //TODO: test with enum...?
 void performGesture(Gesture g) { 
   pinky.write(g.pinkyPos);
@@ -65,8 +66,8 @@ void performGesture(Gesture g) {
   middle.write(g.middlePos);
   Blynk.virtualWrite(V4, middle.read());
 
-  index.write(g.indexPos);
-  Blynk.virtualWrite(V3, index.read());
+  findex.write(g.indexPos);
+  Blynk.virtualWrite(V3, findex.read());
 
   thumb.write(g.thumbPos);
   Blynk.virtualWrite(V1, thumb.read());
@@ -94,7 +95,7 @@ BLYNK_WRITE(V2){
 BLYNK_WRITE(V3){
   //get and send slider info
   int angle = param.asInt();
-  index.write(angle);
+  findex.write(angle);
 }
 //middle
 BLYNK_WRITE(V4){
@@ -106,14 +107,16 @@ BLYNK_WRITE(V4){
 BLYNK_WRITE(V5) {
   int pushed = param.asInt();
   if(pushed) {
-    performGesture(open);
+    //performGesture(Gopen);
+    Serial.write("open requested");
   }
 }
 //close button pushed
 BLYNK_WRITE(V6) {
   int pushed = param.asInt();
   if(pushed) {
-    performGesture(close);
+    //performGesture(Gclose);
+    Serial.write("close requested");
   }
 }
 
@@ -129,7 +132,7 @@ void setup(){
   pinky.attach(pinkypin, 500, 2400);
   thumb.attach(thumbpin, 500, 2400); 
   ring.attach(ringpin, 500, 2400); 
-  index.attach(indexpin, 500, 2400); 
+  findex.attach(indexpin, 500, 2400); 
   middle.attach(middlepin, 500, 2400); 
   
   //misc 
