@@ -7,71 +7,130 @@
 
 #define BLYNK_PRINT Serial
 #define BLYNK_USE_DIRECT_CONNECT
-
 #include <BlynkSimpleEsp32_BLE.h>
 #include <BLEDevice.h>
 #include <BLEServer.h>
 #include <ESP32Servo.h>
 
-// You should get Auth Token in the Blynk App.
-// Go to the Project Settings (nut icon).
+// App auth token. Establishes connection to app.
 char auth[] = "7e305e4259c24f6795f3a723d8657e5c";
-#define servop1 32
-#define servop2 33
-#define servop3 25
-#define servop4 26
-#define servop5 27
-Servo servo1;
-Servo servo2;
-Servo servo3;
-Servo servo4;
-Servo servo5;
+#define pinkypin 32
+#define thumbpin 33
+#define ringpin 25
+#define indexpin 26
+#define middlepin 27
+Servo pinky;
+Servo thumb;
+Servo ring;
+Servo index;
+Servo middle;
 
-//pinky
+//gestures
+Gesture close(180, 180, 180, 180, 180);
+Gesture open(0, 0, 0, 0, 0);
+
+//doesn't do anything - for reference right now.
+enum vpins {vPinky = V0, vRing = V2, vMiddle = V4, vIndex = V3, vThumb = V1};
+
+/* 
+Potential issue with this: writing a value far from the 
+current position to a servo causes it to move very fast due to PID.
+This may cause odd behaviours with the fingers! Test! Beware!
+*/
+class Gesture {
+  public:
+    int pinkyPos;
+    int ringPos;
+    int middlePos;
+    int indexPos;
+    int thumbPos;
+
+    Gesture(int _pinky, int _ring, int _middle, int _index, int _thumb) {
+      pinkyPos = 180 - _pinky; //rotates opposite direction
+      ringPos = 180 - _ring;   //rotates opposite direction
+      middlePos = _middle;
+      indexPos = _index;
+      thumbPos = _thumb;
+    }
+};
+
+//TODO: test with enum...?
+void performGesture(Gesture g) { 
+  pinky.write(g.pinkyPos);
+  Blynk.virtualWrite(V0, pinky.read());
+
+  ring.write(g.ringPos);
+  Blynk.virtualWrite(V2, ring.read());
+
+  middle.write(g.middlePos);
+  Blynk.virtualWrite(V4, middle.read());
+
+  index.write(g.indexPos);
+  Blynk.virtualWrite(V3, index.read());
+
+  thumb.write(g.thumbPos);
+  Blynk.virtualWrite(V1, thumb.read());
+}
+
+//pinky (block left side)
 BLYNK_WRITE(V0){
   //get and send slider info
   int angle = param.asInt();
-  servo1.write(angle);
+  pinky.write(angle);
 }
 //thumb
 BLYNK_WRITE(V1){
   //get and send slider info
   int angle = param.asInt();
-  servo2.write(angle);
+  thumb.write(angle);
 }
-//ring
+//ring (block left side)
 BLYNK_WRITE(V2){
   //get and send slider info
   int angle = param.asInt();
-  servo3.write(angle);
+  ring.write(angle);
 }
 //index
 BLYNK_WRITE(V3){
   //get and send slider info
   int angle = param.asInt();
-  servo4.write(angle);
+  index.write(angle);
 }
 //middle
 BLYNK_WRITE(V4){
   //get and send slider info
   int angle = param.asInt();
-  servo5.write(angle);
+  middle.write(angle);
+}
+//open button clicked
+BLYNK_WRITE(V5) {
+  int pushed = param.asInt();
+  if(pushed) {
+    performGesture(open);
+  }
+}
+//close button pushed
+BLYNK_WRITE(V6) {
+  int pushed = param.asInt();
+  if(pushed) {
+    performGesture(close);
+  }
 }
 
 void setup(){
   //pins
-  pinMode(servop1, OUTPUT);
-  pinMode(servop2, OUTPUT);
-  pinMode(servop3, OUTPUT);
-  pinMode(servop4, OUTPUT);
-  pinMode(servop5, OUTPUT);
+  pinMode(pinkypin, OUTPUT);
+  pinMode(thumbpin, OUTPUT);
+  pinMode(ringpin, OUTPUT);
+  pinMode(indexpin, OUTPUT);
+  pinMode(middlepin, OUTPUT);
  
   //servos
-  servo1.attach(servop1, 500, 2400);
-  servo2.attach(servop2, 500, 2400); 
-  servo3.attach(servop3, 500, 2400); 
-  servo4.attach(servop4, 500, 2400); 
-  servo5.attach(servop5, 500, 2400); 
+  pinky.attach(pinkypin, 500, 2400);
+  thumb.attach(thumbpin, 500, 2400); 
+  ring.attach(ringpin, 500, 2400); 
+  index.attach(indexpin, 500, 2400); 
+  middle.attach(middlepin, 500, 2400); 
   
   //misc 
   Serial.begin(9600);
