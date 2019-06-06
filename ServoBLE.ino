@@ -108,7 +108,7 @@ BLYNK_WRITE(V5) {
   int pushed = param.asInt();
   if(pushed) {
     //performGesture(Gopen);
-    Serial.write("open requested");
+    Serial.write("open requested\n");
   }
 }
 //close button pushed
@@ -116,7 +116,7 @@ BLYNK_WRITE(V6) {
   int pushed = param.asInt();
   if(pushed) {
     //performGesture(Gclose);
-    Serial.write("close requested");
+    Serial.write("close requested\n");
   }
 }
 
