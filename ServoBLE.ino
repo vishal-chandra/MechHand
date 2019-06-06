@@ -107,7 +107,7 @@ BLYNK_WRITE(V4){
 BLYNK_WRITE(V5) {
   int pushed = param.asInt();
   if(pushed) {
-    //performGesture(Gopen);
+    performGesture(Gopen);
     Serial.write("open requested\n");
   }
 }
@@ -115,7 +115,7 @@ BLYNK_WRITE(V5) {
 BLYNK_WRITE(V6) {
   int pushed = param.asInt();
   if(pushed) {
-    //performGesture(Gclose);
+    performGesture(Gclose);
     Serial.write("close requested\n");
   }
 }
