@@ -13,7 +13,9 @@
 #include <ESP32Servo.h>
 
 // App auth token. Establishes connection to app.
-char auth[] = "7e305e4259c24f6795f3a723d8657e5c";
+//char auth[] = "7e305e4259c24f6795f3a723d8657e5c"; personal
+char auth[] = "ee9e940474f246bc95265ab9c8b0975e"; //pennucci
+
 #define pinkypin 32
 #define thumbpin 33
 #define ringpin 25
@@ -32,6 +34,10 @@ enum vpins {vPinky = V0, vRing = V2, vMiddle = V4, vIndex = V3, vThumb = V1};
 Potential issue with this: writing a value far from the 
 current position to a servo causes it to move very fast due to PID.
 This may cause odd behaviours with the fingers! Test! Beware!
+
+Problem update:
+-speed not an issue
+-force untied some knots
 */
 class Gesture {
   public:
@@ -53,7 +59,11 @@ class Gesture {
 //gestures
 Gesture Gclose = Gesture(180, 180, 180, 180, 180);
 Gesture Gopen = Gesture(0, 0, 0, 0, 0);
-Gesture Gflip = Gesture(0, 0, 180, 0, 0);
+Gesture Gflip = Gesture(180, 180, 0, 180, 180);
+//added since test
+Gesture Gpeace = Gesture(180, 180, 0, 0, 180);
+Gesture Gthumbsup = Gesture(180, 180, 180, 180, 0);
+Gesture Gtrump = Gesture(0, 0, 0, 180, 100);
 
 //TODO: test with enum...?
 void performGesture(Gesture g) { 
@@ -103,7 +113,7 @@ BLYNK_WRITE(V4){
   int angle = param.asInt();
   middle.write(angle);
 }
-//open button clicked
+//open button tapped
 BLYNK_WRITE(V5) {
   int pushed = param.asInt();
   if(pushed) {
@@ -111,12 +121,28 @@ BLYNK_WRITE(V5) {
     Serial.write("open requested\n");
   }
 }
-//close button pushed
+//close button tapped
 BLYNK_WRITE(V6) {
   int pushed = param.asInt();
   if(pushed) {
     performGesture(Gclose);
     Serial.write("close requested\n");
+  }
+}
+//trump button tapped
+BLYNK_WRITE(V7) {
+  int pushed = param.asInt();
+  if(pushed) {
+    performGesture(Gtrump);
+    Serial.write("trump requested\n");
+  }
+}
+//flip off button tapped
+BLYNK_WRITE(V8) {
+  int pushed = param.asInt();
+  if(pushed) {
+    performGesture(Gflip);
+    Serial.write("flip off requested\n");
   }
 }
 
@@ -138,7 +164,7 @@ void setup(){
   //misc 
   Serial.begin(9600);
   Serial.println("Waiting for connections...");
-  Blynk.setDeviceName("Blynk");
+  Blynk.setDeviceName("Vishal & Sophia");
   Blynk.begin(auth);
 }
 
