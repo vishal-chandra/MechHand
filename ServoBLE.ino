@@ -27,6 +27,9 @@ Servo ring;
 Servo findex;
 Servo middle;
 
+int piezoChannel = 0;
+int piezoRes = 8;
+
 //doesn't do anything - for reference right now.
 enum vpins {vPinky = V0, vRing = V2, vMiddle = V4, vIndex = V3, vThumb = V1};
 
@@ -143,7 +146,7 @@ BLYNK_WRITE(V8) {
   if(pushed) {
     performGesture(Gflip);
     Serial.write("flip off requested\n");
-    tone(23, 2500, 500);
+    ledcWriteTone(piezoChannel, 2500);
   }
 }
 
@@ -154,8 +157,10 @@ void setup(){
   pinMode(ringpin, OUTPUT);
   pinMode(indexpin, OUTPUT);
   pinMode(middlepin, OUTPUT);
-  pinMode(23, OUTPUT);
- 
+  
+  ledcSetup(piezoChannel, 2500, piezoRes);
+  ledcAttachPin(23, piezoChannel);
+
   //servos
   pinky.attach(pinkypin, 500, 2400);
   thumb.attach(thumbpin, 500, 2400); 
