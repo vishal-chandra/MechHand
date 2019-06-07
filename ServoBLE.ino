@@ -27,7 +27,7 @@ Servo ring;
 Servo findex;
 Servo middle;
 
-int piezoChannel = 0;
+int piezoChannel = 10;
 int piezoRes = 8;
 
 //doesn't do anything - for reference right now.
