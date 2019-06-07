@@ -57,13 +57,13 @@ class Gesture {
 };
 
 //gestures
-Gesture Gclose = Gesture(180, 180, 180, 180, 180);
-Gesture Gopen = Gesture(0, 0, 0, 0, 0);
-Gesture Gflip = Gesture(180, 180, 0, 180, 180);
-//added since test
+Gesture Gopen = Gesture(0, 0, 0, 0, 0); //on pin V5
+Gesture Gclose = Gesture(180, 180, 180, 180, 180); //on pin V6
+Gesture Gtrump = Gesture(0, 0, 0, 180, 100); //on pin V7
+Gesture Gflip = Gesture(180, 180, 0, 180, 180); //on pin V8
+//not implemented
 Gesture Gpeace = Gesture(180, 180, 0, 0, 180);
 Gesture Gthumbsup = Gesture(180, 180, 180, 180, 0);
-Gesture Gtrump = Gesture(0, 0, 0, 180, 100);
 
 //TODO: test with enum...?
 void performGesture(Gesture g) { 
@@ -143,7 +143,6 @@ BLYNK_WRITE(V8) {
   if(pushed) {
     performGesture(Gflip);
     Serial.write("flip off requested\n");
-    tone(23, 2500, 500);
   }
 }
 
@@ -154,8 +153,7 @@ void setup(){
   pinMode(ringpin, OUTPUT);
   pinMode(indexpin, OUTPUT);
   pinMode(middlepin, OUTPUT);
-  pinMode(23, OUTPUT);
- 
+  
   //servos
   pinky.attach(pinkypin, 500, 2400);
   thumb.attach(thumbpin, 500, 2400); 
