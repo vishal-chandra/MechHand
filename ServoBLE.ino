@@ -13,8 +13,8 @@
 #include <ESP32Servo.h>
 
 // App auth token. Establishes connection to app.
-//char auth[] = "7e305e4259c24f6795f3a723d8657e5c"; personal
-char auth[] = "ee9e940474f246bc95265ab9c8b0975e"; //pennucci
+char auth[] = "7e305e4259c24f6795f3a723d8657e5c"; //personal
+//char auth[] = "ee9e940474f246bc95265ab9c8b0975e"; //pennucci
 
 #define pinkypin 32
 #define thumbpin 33
@@ -143,6 +143,7 @@ BLYNK_WRITE(V8) {
   if(pushed) {
     performGesture(Gflip);
     Serial.write("flip off requested\n");
+    tone(23, 2500, 500);
   }
 }
 
@@ -153,6 +154,7 @@ void setup(){
   pinMode(ringpin, OUTPUT);
   pinMode(indexpin, OUTPUT);
   pinMode(middlepin, OUTPUT);
+  pinMode(23, OUTPUT);
  
   //servos
   pinky.attach(pinkypin, 500, 2400);
@@ -166,6 +168,7 @@ void setup(){
   Serial.println("Waiting for connections...");
   Blynk.setDeviceName("Vishal & Sophia");
   Blynk.begin(auth);
+  
 }
 
 void loop(){
