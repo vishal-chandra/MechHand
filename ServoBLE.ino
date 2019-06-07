@@ -11,6 +11,7 @@
 #include <BLEDevice.h>
 #include <BLEServer.h>
 #include <ESP32Servo.h>
+#include <Gestures.h>
 
 // App auth token. Establishes connection to app.
 char auth[] = "7e305e4259c24f6795f3a723d8657e5c"; //personal
@@ -27,34 +28,6 @@ Servo ring;
 Servo findex;
 Servo middle;
 
-//doesn't do anything - for reference right now.
-enum vpins {vPinky = V0, vRing = V2, vMiddle = V4, vIndex = V3, vThumb = V1};
-
-/* 
-Potential issue with this: writing a value far from the 
-current position to a servo causes it to move very fast due to PID.
-This may cause odd behaviours with the fingers! Test! Beware!
-
-Problem update:
--speed not an issue
--force untied some knots
-*/
-class Gesture {
-  public:
-    int pinkyPos;
-    int ringPos;
-    int middlePos;
-    int indexPos;
-    int thumbPos;
-
-    Gesture(int _pinky, int _ring, int _middle, int _index, int _thumb) {
-      pinkyPos = 180 - _pinky; //rotates opposite direction
-      ringPos = 180 - _ring;   //rotates opposite direction
-      middlePos = _middle;
-      indexPos = _index;
-      thumbPos = _thumb;
-    }
-};
 
 //gestures
 Gesture Gopen = Gesture(0, 0, 0, 0, 0); //on pin V5
@@ -65,7 +38,6 @@ Gesture Gflip = Gesture(180, 180, 0, 180, 180); //on pin V8
 Gesture Gpeace = Gesture(180, 180, 0, 0, 180);
 Gesture Gthumbsup = Gesture(180, 180, 180, 180, 0);
 
-//TODO: test with enum...?
 void performGesture(Gesture g) { 
   pinky.write(g.pinkyPos);
   Blynk.virtualWrite(V0, pinky.read());
