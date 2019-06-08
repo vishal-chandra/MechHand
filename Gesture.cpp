@@ -1,4 +1,4 @@
-#include <Gestures.h>
+#include <Gesture.h>
 #include <Arduino.h>
 
 Gesture::Gesture(int _pinky, int _ring, int _middle, int _index, int _thumb) {
