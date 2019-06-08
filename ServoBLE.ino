@@ -9,8 +9,8 @@
 
 #define BLYNK_PRINT Serial
 #define BLYNK_USE_DIRECT_CONNECT
-#include "Hand.h"
-#include "Gesture.h"
+#include "src/Hand/Hand.h"
+#include "src/Gesture/Gesture.h"
 #include <BlynkSimpleEsp32_BLE.h>
 #include <BLEDevice.h>
 #include <BLEServer.h>
